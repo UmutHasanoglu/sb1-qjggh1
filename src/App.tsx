@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FileType } from 'lucide-react';
 import ConversionTool from './components/ConversionTool';
+import { GoogleSignInButton } from './components/GoogleSignInButton';
+import { useAuthStore } from './stores/authStore';
 
 function App() {
+  const { user, isLoading, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <nav className="bg-white shadow-sm">
@@ -23,7 +35,11 @@ function App() {
       </nav>
 
       <main className="py-12">
-        <ConversionTool />
+        {user ? (
+          <ConversionTool />
+        ) : (
+          <GoogleSignInButton />
+        )}
       </main>
 
       <footer className="bg-white mt-12">
